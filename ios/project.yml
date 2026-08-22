@@ -8,6 +8,9 @@ options:
 packages:
   SollaCore:
     path: ../SollaCore
+  ZIPFoundation:
+    url: https://github.com/weichsel/ZIPFoundation
+    from: 0.9.19
 
 targets:
   Solla:
@@ -15,6 +18,11 @@ targets:
     platform: iOS
     sources:
       - Solla
+      # Folder reference so the pack subdirectories survive into the bundle
+      # (SoundPacks/<pack-id>/manifest.json etc.).
+      - path: Resources/SoundPacks
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: SollaCore
         products:
@@ -22,12 +30,15 @@ targets:
           - Playback
           - ToneSynth
           - SollaEngine
+      - package: ZIPFoundation
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         PRODUCT_BUNDLE_IDENTIFIER: me.adamchol.solla
+        DEVELOPMENT_TEAM: G22SPKBM49
+        CODE_SIGN_STYLE: Automatic
         SWIFT_VERSION: "5.10"
         TARGETED_DEVICE_FAMILY: "1"
         CURRENT_PROJECT_VERSION: 1

@@ -13,14 +13,14 @@ public struct BenbassatSummary: Sendable {
 
     public let correct: Int
     public let total: Int
-    public let perDegree: [ScaleDegree: DegreeStat]
+    public let perDegree: [ChromaticDegree: DegreeStat]
 
     public var accuracy: Double {
         total == 0 ? 0 : Double(correct) / Double(total)
     }
 
-    public init(records: [RoundRecord<ScaleDegree>]) {
-        var perDegree: [ScaleDegree: DegreeStat] = [:]
+    public init(records: [RoundRecord<ChromaticDegree>]) {
+        var perDegree: [ChromaticDegree: DegreeStat] = [:]
         var correct = 0
         for record in records {
             var stat = perDegree[record.expected] ?? DegreeStat(correct: 0, total: 0)

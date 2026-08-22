@@ -40,6 +40,30 @@
                     asyncTest(SessionEngineTests.testStatesStreamYieldsCurrentStateImmediately)
                 ),
                 (
+                    "testSubmitDuringTargetShowsFeedbackAndDoesNotClobber",
+                    asyncTest(SessionEngineTests.testSubmitDuringTargetShowsFeedbackAndDoesNotClobber)
+                ),
+                (
+                    "testSubmitDuringCadenceIgnored",
+                    asyncTest(SessionEngineTests.testSubmitDuringCadenceIgnored)
+                ),
+                (
+                    "testAutoResolutionPlaysAfterNormalSubmit",
+                    asyncTest(SessionEngineTests.testAutoResolutionPlaysAfterNormalSubmit)
+                ),
+                (
+                    "testAutoResolutionAfterEarlySubmitWaitsForTargetToFinish",
+                    asyncTest(SessionEngineTests.testAutoResolutionAfterEarlySubmitWaitsForTargetToFinish)
+                ),
+                (
+                    "testPlayResolutionOnlyDuringFeedbackAndNoDoublePlay",
+                    asyncTest(SessionEngineTests.testPlayResolutionOnlyDuringFeedbackAndNoDoublePlay)
+                ),
+                (
+                    "testReplayIgnoresResolutionSegment",
+                    asyncTest(SessionEngineTests.testReplayIgnoresResolutionSegment)
+                ),
+                (
                     "testDeterministicWithSameSeed",
                     asyncTest(SessionEngineTests.testDeterministicWithSameSeed)
                 ),
@@ -61,6 +85,38 @@
                 (
                     "testAllDegreesAndKeysEventuallyAppear",
                     BenbassatExerciseTests.testAllDegreesAndKeysEventuallyAppear
+                ),
+                (
+                    "testRoundKeyMatchesCadence",
+                    BenbassatExerciseTests.testRoundKeyMatchesCadence
+                ),
+                (
+                    "testFixedTonicUsedEveryRound",
+                    BenbassatExerciseTests.testFixedTonicUsedEveryRound
+                ),
+                (
+                    "testResolutionWalkForAllDegrees",
+                    BenbassatExerciseTests.testResolutionWalkForAllDegrees
+                ),
+                (
+                    "testEnabledDegreesRestrictPool",
+                    BenbassatExerciseTests.testEnabledDegreesRestrictPool
+                ),
+                (
+                    "testResolutionWalkOffsets",
+                    BenbassatExerciseTests.testResolutionWalkOffsets
+                ),
+                (
+                    "testRandomOctavesMoveTargetRegister",
+                    BenbassatExerciseTests.testRandomOctavesMoveTargetRegister
+                ),
+                (
+                    "testMinorRoundsUseNaturalMinorWithHarmonicDominant",
+                    BenbassatExerciseTests.testMinorRoundsUseNaturalMinorWithHarmonicDominant
+                ),
+                (
+                    "testConfigTempoMapping",
+                    BenbassatExerciseTests.testConfigTempoMapping
                 ),
             ]),
             testCase([

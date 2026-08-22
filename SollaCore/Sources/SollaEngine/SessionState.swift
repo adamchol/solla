@@ -4,7 +4,8 @@ import Playback
 public enum SessionPhase<Answer: Hashable & Sendable>: Hashable, Sendable {
     /// Session not started yet.
     case idle
-    /// A stimulus segment is sounding; answering is disabled.
+    /// A stimulus segment is sounding. Answering is allowed only for
+    /// segments whose `acceptsEarlyAnswer` is set (the target note).
     case playing(StimulusID)
     /// Stimulus done; waiting for the user's answer.
     case awaitingAnswer
@@ -24,6 +25,8 @@ public struct SessionState<Answer: Hashable & Sendable>: Sendable {
     public var records: [RoundRecord<Answer>]
     /// The current round, nil until the session starts.
     public var round: ExerciseRound<Answer>?
+    /// True while the resolution walk is sounding (phase stays `.feedback`).
+    public var isPlayingResolution: Bool
 
     public init(roundCount: Int) {
         self.phase = .idle
@@ -32,5 +35,6 @@ public struct SessionState<Answer: Hashable & Sendable>: Sendable {
         self.score = 0
         self.records = []
         self.round = nil
+        self.isPlayingResolution = false
     }
 }

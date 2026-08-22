@@ -14,6 +14,16 @@ public struct PitchClass: Hashable, Sendable {
     }
 
     public static let all: [PitchClass] = (0..<12).map(PitchClass.init)
+
+    /// Conventional major-key spelling of the chroma (flat keys spelled flat,
+    /// F♯ rather than G♭ per common major-key convention).
+    public var name: String {
+        Self.names[value]
+    }
+
+    private static let names = [
+        "C", "D♭", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B",
+    ]
 }
 
 /// A concrete pitch identified by its MIDI note number (A4 = 69, C4 = 60).

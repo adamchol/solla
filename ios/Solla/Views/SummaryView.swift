@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SummaryView: View {
     let summary: BenbassatSummary
+    var mode: Mode = .major
     let onDone: () -> Void
 
     var body: some View {
@@ -20,10 +21,10 @@ struct SummaryView: View {
 
             List {
                 Section("By degree") {
-                    ForEach(ScaleDegree.allCases, id: \.self) { degree in
+                    ForEach(summary.perDegree.keys.sorted(), id: \.self) { degree in
                         if let stat = summary.perDegree[degree] {
                             HStack {
-                                Text(degree.solfege)
+                                Text(degree.solfege(in: mode))
                                     .font(.body.weight(.medium))
                                 Spacer()
                                 Text("\(stat.correct)/\(stat.total)")

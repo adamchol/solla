@@ -17,6 +17,38 @@
                 ("testSilenceDuringGapAndAfterEnd", ToneSequencerTests.testSilenceDuringGapAndAfterEnd),
                 ("testRenderIsDeterministic", ToneSequencerTests.testRenderIsDeterministic),
             ]),
+            testCase([
+                (
+                    "testPicksNearestLayerThenNearestRoot",
+                    SampleBankTests.testPicksNearestLayerThenNearestRoot
+                ),
+                ("testEmptyBankReturnsNil", SampleBankTests.testEmptyBankReturnsNil),
+            ]),
+            testCase([
+                (
+                    "testUnshiftedPlaybackKeepsFrequency",
+                    SampleSequencerTests.testUnshiftedPlaybackKeepsFrequency
+                ),
+                ("testResamplingShiftsPitch", SampleSequencerTests.testResamplingShiftsPitch),
+                (
+                    "testReleaseRampEndsInSilenceWithoutClicks",
+                    SampleSequencerTests.testReleaseRampEndsInSilenceWithoutClicks
+                ),
+                ("testChordDoesNotClip", SampleSequencerTests.testChordDoesNotClip),
+                ("testShortRecordingEndsVoiceEarly", SampleSequencerTests.testShortRecordingEndsVoiceEarly),
+                ("testRenderIsDeterministic", SampleSequencerTests.testRenderIsDeterministic),
+            ]),
+            testCase([
+                ("testDecodeAndValidate", SamplePackManifestTests.testDecodeAndValidate),
+                (
+                    "testRejectsUnsupportedFormatVersion",
+                    SamplePackManifestTests.testRejectsUnsupportedFormatVersion
+                ),
+                (
+                    "testRejectsSampleWithUnknownLayer",
+                    SamplePackManifestTests.testRejectsSampleWithUnknownLayer
+                ),
+            ]),
         ]
     }
 #endif

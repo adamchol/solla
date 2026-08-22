@@ -4,7 +4,7 @@ struct HomeView: View {
     var body: some View {
         List {
             Section {
-                NavigationLink(value: Route.scaleDegreeGame) {
+                NavigationLink(value: Route.scaleDegreeSetup) {
                     modeRow(
                         title: "Scale Degrees",
                         subtitle: "Hear a cadence, name the note",
@@ -34,6 +34,11 @@ struct HomeView: View {
             }
         }
         .navigationTitle("Solla")
+        .toolbar {
+            NavigationLink(value: Route.settings) {
+                Image(systemName: "gearshape")
+            }
+        }
     }
 
     private func modeRow(title: String, subtitle: String, systemImage: String) -> some View {

@@ -10,13 +10,22 @@
             testCase([
                 ("testReferenceFrequencies", PitchTests.testReferenceFrequencies),
                 ("testPitchClassNormalization", PitchTests.testPitchClassNormalization),
+                ("testPitchClassNames", PitchTests.testPitchClassNames),
             ]),
             testCase([
                 ("testMajorIntervals", KeyTests.testMajorIntervals),
+                ("testMinorIntervals", KeyTests.testMinorIntervals),
+                ("testMinorSolfege", KeyTests.testMinorSolfege),
                 ("testSolfegeLabels", KeyTests.testSolfegeLabels),
                 ("testDegreePitchesInAllKeys", KeyTests.testDegreePitchesInAllKeys),
                 ("testContainsRejectsChromaticNotes", KeyTests.testContainsRejectsChromaticNotes),
                 ("testDegreeAdvance", KeyTests.testDegreeAdvance),
+                ("testChromaticDegreeSolfege", KeyTests.testChromaticDegreeSolfege),
+                (
+                    "testChromaticDegreeDiatonicMembership",
+                    KeyTests.testChromaticDegreeDiatonicMembership
+                ),
+                ("testKeyDisplayName", KeyTests.testKeyDisplayName),
             ]),
             testCase([
                 ("testTriadDegrees", ChordTests.testTriadDegrees),

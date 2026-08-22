@@ -21,6 +21,17 @@ public enum ScaleDegree: Int, CaseIterable, Hashable, Sendable {
         }
     }
 
+    /// Movable-do solfège syllable in a mode: do-based minor lowers the
+    /// third, sixth and seventh to Me, Le and Te.
+    public func solfege(in mode: Mode) -> String {
+        switch (mode, self) {
+        case (.minor, .three): return "Me"
+        case (.minor, .six): return "Le"
+        case (.minor, .seven): return "Te"
+        default: return solfege
+        }
+    }
+
     /// Roman numeral for the degree (uppercase; quality context comes from the mode).
     public var romanNumeral: String {
         switch self {

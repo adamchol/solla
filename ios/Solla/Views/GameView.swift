@@ -4,13 +4,20 @@ import SollaEngine
 import SwiftUI
 
 struct GameView: View {
-    @State private var model = GameViewModel()
+    @State private var model: GameViewModel
     @Environment(\.dismiss) private var dismiss
+
+    private let options: ScaleDegreeOptions
+
+    init(options: ScaleDegreeOptions = .default) {
+        self.options = options
+        _model = State(initialValue: GameViewModel(options: options))
+    }
 
     var body: some View {
         Group {
             if case .summary = model.state.phase {
-                SummaryView(summary: model.summary) {
+                SummaryView(summary: model.summary, mode: currentMode) {
                     dismiss()
                 }
             } else {
@@ -21,21 +28,36 @@ struct GameView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { model.start() }
         .onDisappear { model.tearDown() }
+        #if DEBUG
+            .task {
+                // Test hook: answer automatically after the stimulus so
+                // screenshot runs can capture feedback and the resolution
+                // walk without driving the UI.
+                if let raw = ProcessInfo.processInfo.environment["SOLLA_AUTO_ANSWER"],
+                    let offset = Int(raw)
+                {
+                    try? await Task.sleep(for: .seconds(8))
+                    model.tapOffset(offset)
+                }
+            }
+        #endif
     }
 
     private var gameBody: some View {
         VStack(spacing: 32) {
             header
 
+            keyLabel
+
             Spacer()
 
-            statusLabel
+            statusIndicator
 
             replayButtons
 
             Spacer()
 
-            degreeGrid
+            scaleRow
 
             nextButton
         }
@@ -53,59 +75,83 @@ struct GameView: View {
         .foregroundStyle(.secondary)
     }
 
-    private var statusLabel: some View {
+    private var keyLabel: some View {
+        // The space placeholder keeps the layout stable before round 1.
+        Text(model.state.round?.key?.displayName ?? " ")
+            .font(.title2.weight(.semibold))
+    }
+
+    private var statusIndicator: some View {
         Group {
             switch model.state.phase {
-            case .playing(.cadence):
-                Text("Listen — the key…")
             case .playing:
-                Text("…and the note")
-            case .awaitingAnswer:
-                Text("Which degree was it?")
+                Image(systemName: "speaker.wave.2")
+                    .symbolEffect(.variableColor.iterative, isActive: true)
+                    .foregroundStyle(.secondary)
             case .feedback(let record):
-                if record.isCorrect {
-                    Text("Correct")
-                        .foregroundStyle(.green)
-                } else {
-                    Text("It was \(record.expected.solfege)")
-                        .foregroundStyle(.red)
-                }
+                Image(systemName: record.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill")
+                    .foregroundStyle(record.isCorrect ? Color.green : Color.red)
             default:
-                Text(" ")
+                Color.clear
             }
         }
-        .font(.title3.weight(.medium))
+        .font(.title)
+        .frame(height: 36)
         .animation(.default, value: model.state.phase)
     }
 
     private var replayButtons: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 20) {
             Button {
                 model.replayCadence()
             } label: {
-                Label("Cadence", systemImage: "arrow.counterclockwise")
+                Image(systemName: "music.quarternote.3")
             }
+            .accessibilityLabel("Replay cadence")
+            .disabled(!canInteract)
 
             Button {
                 model.replayNote()
             } label: {
-                Label("Note", systemImage: "arrow.counterclockwise")
+                Image(systemName: "music.note")
             }
+            .accessibilityLabel("Replay note")
+            .disabled(!canInteract)
+
+            Button {
+                model.playResolution()
+            } label: {
+                Image(systemName: "arrow.down.right.circle")
+            }
+            .accessibilityLabel("Play resolution")
+            .disabled(!isInFeedback || model.state.isPlayingResolution)
         }
+        .font(.title3)
         .buttonStyle(.bordered)
-        .disabled(!canInteract)
+        .buttonBorderShape(.circle)
     }
 
-    private var degreeGrid: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 72), spacing: 12)], spacing: 12) {
-            ForEach(model.state.round?.options ?? ScaleDegree.allCases, id: \.self) { degree in
-                DegreeButton(
-                    degree: degree,
-                    role: buttonRole(for: degree),
-                    enabled: canAnswer
-                ) {
-                    model.tapDegree(degree)
-                }
+    /// The enabled degrees a round offers, as semitone offsets.
+    private var visibleOffsets: Set<Int> {
+        if let roundOptions = model.state.round?.options {
+            return Set(roundOptions.map(\.semitone))
+        }
+        return Set(options.enabledDegrees)
+    }
+
+    /// The answer buttons laid out like a keyboard: diatonic degrees (plus
+    /// the high Do) below, chromatic degrees above, between their neighbours.
+    /// Both Do buttons submit the tonic; either one is a valid answer.
+    private var scaleRow: some View {
+        DegreeRows(mode: currentMode, visible: visibleOffsets) { offset in
+            let degree = ChromaticDegree(offset)
+            ScaleNoteButton(
+                label: degree.solfege(in: currentMode),
+                role: role(at: offset, degree: degree),
+                isSounding: model.resolutionHighlight == offset,
+                enabled: canAnswer
+            ) {
+                model.tapOffset(offset)
             }
         }
     }
@@ -124,9 +170,20 @@ struct GameView: View {
         .disabled(!isInFeedback)
     }
 
+    private var currentMode: Mode {
+        model.state.round?.key?.mode ?? options.mode
+    }
+
     private var canAnswer: Bool {
-        if case .awaitingAnswer = model.state.phase { return true }
-        return false
+        switch model.state.phase {
+        case .awaitingAnswer:
+            return true
+        case .playing(let id):
+            // The target note accepts answers while it is still sounding.
+            return model.state.round?.segment(id)?.acceptsEarlyAnswer == true
+        default:
+            return false
+        }
     }
 
     private var isInFeedback: Bool {
@@ -142,10 +199,10 @@ struct GameView: View {
         model.state.roundIndex + 1 >= model.state.roundCount
     }
 
-    private func buttonRole(for degree: ScaleDegree) -> DegreeButton.Role {
+    private func role(at offset: Int, degree: ChromaticDegree) -> ScaleNoteButton.Role {
         guard case .feedback(let record) = model.state.phase else { return .neutral }
         if degree == record.expected { return .correct }
-        if degree == record.given { return .wrong }
+        if offset == model.lastTappedOffset, !record.isCorrect { return .wrong }
         return .neutral
     }
 }

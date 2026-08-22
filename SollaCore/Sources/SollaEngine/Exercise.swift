@@ -1,3 +1,4 @@
+import MusicTheory
 import Playback
 
 /// A training exercise: a factory of rounds for the generic `SessionEngine`.
@@ -24,11 +25,14 @@ public struct ExerciseRound<Answer: Hashable & Sendable>: Sendable {
     public let expected: Answer
     /// Answer options in the order the UI should present them.
     public let options: [Answer]
+    /// The round's key, when the exercise is keyed. Nil for unkeyed exercises.
+    public let key: Key?
 
-    public init(segments: [StimulusSegment], expected: Answer, options: [Answer]) {
+    public init(segments: [StimulusSegment], expected: Answer, options: [Answer], key: Key? = nil) {
         self.segments = segments
         self.expected = expected
         self.options = options
+        self.key = key
     }
 
     public func segment(_ id: StimulusID) -> StimulusSegment? {

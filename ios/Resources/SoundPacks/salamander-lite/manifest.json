@@ -1,0 +1,114 @@
+{
+  "formatVersion": 1,
+  "id": "salamander-lite",
+  "name": "Piano (built-in)",
+  "version": "1.0.0",
+  "instrument": "piano",
+  "sampleRate": 44100,
+  "channels": 1,
+  "releaseSeconds": 0.35,
+  "attribution": {
+    "title": "Salamander Grand Piano V3+",
+    "author": "Alexander Holm",
+    "license": "CC-BY-3.0",
+    "url": "https://freepats.zenvoid.org/Piano/acoustic-grand-piano.html"
+  },
+  "layers": [
+    {
+      "id": 8,
+      "nominalGain": 0.85
+    }
+  ],
+  "samples": [
+    {
+      "file": "A1v8.m4a",
+      "rootMidi": 33,
+      "layer": 8
+    },
+    {
+      "file": "C2v8.m4a",
+      "rootMidi": 36,
+      "layer": 8
+    },
+    {
+      "file": "D#2v8.m4a",
+      "rootMidi": 39,
+      "layer": 8
+    },
+    {
+      "file": "F#2v8.m4a",
+      "rootMidi": 42,
+      "layer": 8
+    },
+    {
+      "file": "A2v8.m4a",
+      "rootMidi": 45,
+      "layer": 8
+    },
+    {
+      "file": "C3v8.m4a",
+      "rootMidi": 48,
+      "layer": 8
+    },
+    {
+      "file": "D#3v8.m4a",
+      "rootMidi": 51,
+      "layer": 8
+    },
+    {
+      "file": "F#3v8.m4a",
+      "rootMidi": 54,
+      "layer": 8
+    },
+    {
+      "file": "A3v8.m4a",
+      "rootMidi": 57,
+      "layer": 8
+    },
+    {
+      "file": "C4v8.m4a",
+      "rootMidi": 60,
+      "layer": 8
+    },
+    {
+      "file": "D#4v8.m4a",
+      "rootMidi": 63,
+      "layer": 8
+    },
+    {
+      "file": "F#4v8.m4a",
+      "rootMidi": 66,
+      "layer": 8
+    },
+    {
+      "file": "A4v8.m4a",
+      "rootMidi": 69,
+      "layer": 8
+    },
+    {
+      "file": "C5v8.m4a",
+      "rootMidi": 72,
+      "layer": 8
+    },
+    {
+      "file": "D#5v8.m4a",
+      "rootMidi": 75,
+      "layer": 8
+    },
+    {
+      "file": "F#5v8.m4a",
+      "rootMidi": 78,
+      "layer": 8
+    },
+    {
+      "file": "A5v8.m4a",
+      "rootMidi": 81,
+      "layer": 8
+    },
+    {
+      "file": "C6v8.m4a",
+      "rootMidi": 84,
+      "layer": 8
+    }
+  ]
+}

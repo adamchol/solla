@@ -8,3 +8,7 @@
 ios/Solla.xcodeproj/
 xcuserdata/
 DerivedData/
+
+# Sample pack pipeline (source archive cache and built release assets)
+scripts/.cache/
+scripts/dist/

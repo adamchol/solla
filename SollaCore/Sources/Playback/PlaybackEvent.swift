@@ -28,6 +28,8 @@ public enum StimulusID: Hashable, Sendable {
     case cadence
     /// The material the user must identify.
     case target
+    /// The guided walk from the target back to the nearest tonic.
+    case resolution
     /// Room for future exercise types.
     case custom(String)
 }
@@ -37,11 +39,23 @@ public struct StimulusSegment: Hashable, Sendable {
     public let id: StimulusID
     public let events: [PlaybackEvent]
     public let replayable: Bool
+    /// Answers may be submitted while this segment is still sounding.
+    public let acceptsEarlyAnswer: Bool
+    /// Played automatically as part of the round's opening stimulus.
+    public let playsInStimulus: Bool
 
-    public init(id: StimulusID, events: [PlaybackEvent], replayable: Bool = true) {
+    public init(
+        id: StimulusID,
+        events: [PlaybackEvent],
+        replayable: Bool = true,
+        acceptsEarlyAnswer: Bool = false,
+        playsInStimulus: Bool = true
+    ) {
         self.id = id
         self.events = events
         self.replayable = replayable
+        self.acceptsEarlyAnswer = acceptsEarlyAnswer
+        self.playsInStimulus = playsInStimulus
     }
 
     public var totalDuration: Double {

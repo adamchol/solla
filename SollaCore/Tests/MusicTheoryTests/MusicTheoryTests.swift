@@ -15,11 +15,33 @@ final class PitchTests: XCTestCase {
         XCTAssertEqual(PitchClass(-13).value, 11)
         XCTAssertEqual(Pitch(midi: 61).pitchClass, PitchClass(1))
     }
+
+    func testPitchClassNames() {
+        XCTAssertEqual(
+            PitchClass.all.map(\.name),
+            ["C", "D♭", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"]
+        )
+    }
 }
 
 final class KeyTests: XCTestCase {
     func testMajorIntervals() {
         XCTAssertEqual(Mode.major.intervals, [0, 2, 4, 5, 7, 9, 11])
+    }
+
+    func testMinorIntervals() {
+        XCTAssertEqual(Mode.minor.intervals, [0, 2, 3, 5, 7, 8, 10])
+    }
+
+    func testMinorSolfege() {
+        XCTAssertEqual(
+            ScaleDegree.allCases.map { $0.solfege(in: .minor) },
+            ["Do", "Re", "Me", "Fa", "Sol", "Le", "Te"]
+        )
+        XCTAssertEqual(
+            ScaleDegree.allCases.map { $0.solfege(in: .major) },
+            ScaleDegree.allCases.map(\.solfege)
+        )
     }
 
     func testSolfegeLabels() {
@@ -52,6 +74,41 @@ final class KeyTests: XCTestCase {
         XCTAssertEqual(ScaleDegree.one.advanced(by: 2), .three)
         XCTAssertEqual(ScaleDegree.five.advanced(by: 4), .two)
         XCTAssertEqual(ScaleDegree.seven.advanced(by: 1), .one)
+    }
+
+    func testChromaticDegreeSolfege() {
+        XCTAssertEqual(
+            ChromaticDegree.all.map { $0.solfege(in: .major) },
+            ["Do", "Di", "Re", "Ri", "Mi", "Fa", "Fi", "Sol", "Si", "La", "Li", "Ti"]
+        )
+        XCTAssertEqual(
+            ChromaticDegree.all.map { $0.solfege(in: .minor) },
+            ["Do", "Di", "Re", "Me", "Mi", "Fa", "Fi", "Sol", "Le", "La", "Te", "Ti"]
+        )
+    }
+
+    func testChromaticDegreeDiatonicMembership() {
+        XCTAssertEqual(
+            ChromaticDegree.all.filter { $0.isDiatonic(in: .major) },
+            ChromaticDegree.diatonic(in: .major)
+        )
+        XCTAssertEqual(
+            ChromaticDegree.diatonic(in: .minor).map(\.semitone),
+            [0, 2, 3, 5, 7, 8, 10]
+        )
+        XCTAssertEqual(ChromaticDegree(12).semitone, 0)
+        XCTAssertEqual(ChromaticDegree(-1).semitone, 11)
+    }
+
+    func testKeyDisplayName() {
+        XCTAssertEqual(Key(tonic: PitchClass(0), mode: .major).displayName, "C Major")
+        XCTAssertEqual(Key(tonic: PitchClass(3), mode: .major).displayName, "E♭ Major")
+        XCTAssertEqual(Key(tonic: PitchClass(6), mode: .major).displayName, "F♯ Major")
+        // Minor keys use their own conventional spellings.
+        XCTAssertEqual(Key(tonic: PitchClass(1), mode: .minor).displayName, "C♯ Minor")
+        XCTAssertEqual(Key(tonic: PitchClass(3), mode: .minor).displayName, "E♭ Minor")
+        XCTAssertEqual(Key(tonic: PitchClass(8), mode: .minor).displayName, "G♯ Minor")
+        XCTAssertEqual(Key(tonic: PitchClass(10), mode: .minor).displayName, "B♭ Minor")
     }
 }
 
